@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Dynamic Title: Company Name (SYMBOL) - Detail -->
+    <title>{{ stock.name }} ({{ stock.symbol }}) - Detail</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- Reusing the professional gray theme CSS for consistency -->
+    <style>
+        :root {
+            --primary-text: #333;
+            --secondary-text: #666;
+            --background-light: #f7f9fb;
+            --background-medium: #e9eff3;
+            --background-dark: #cbd4da;
+            --border-color: #e0e0e0;
+            --table-header-bg: #4a5568; /* Darker gray for header */
+            --table-header-text: #ffffff;
+            --table-row-hover: #f0f4f7;
+            --card-bg: #ffffff;
+            --shadow-light: 0 2px 5px rgba(0, 0, 0, 0.05);
+            --shadow-medium: 0 4px 10px rgba(0, 0, 0, 0.08);
+            --accent-color: #4a5568; /* Used for subtle accents (dark gray/blue) */
+            --link-color: #007bff;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 40px;
+            background-color: var(--background-light);
+            color: var(--primary-text);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background-color: var(--card-bg);
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: var(--shadow-medium);
+        }
+
+        h1 {
+            font-weight: 700;
+            color: var(--accent-color);
+            text-align: center;
+            margin-bottom: 5px;
+            font-size: 2.5em;
+        }
+
+        h2 {
+            font-weight: 300;
+            color: var(--secondary-text);
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 1.2em;
+        }
+
+        h3 {
+            font-size: 1.4em;
+            font-weight: 500;
+            margin-top: 30px;
+            color: var(--primary-text);
+            border-left: 4px solid var(--accent-color);
+            padding-left: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: var(--link-color);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .form-group {
+            display: flex;
+            align-items: center;
+            gap: 10px; /* Space between label and select */
+            flex-grow: 1;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        /* CHART SIZING - MAKE IT BIGGER */
+        .tradingview-widget-container {
+            /* INCREASED HEIGHT HERE: 650px is taller */
+            height: 650px; 
+            width: 100%;
+            margin: 20px 0;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        /* NEW SCROLL CONTAINER STYLE for the table */
+        .table-scroll-container {
+            max-height: 500px; /* Set a fixed height */
+            overflow-y: auto; /* Enable vertical scrolling */
+            overflow-x: auto;
+            border-radius: 6px;
+            box-shadow: var(--shadow-light);
+            /* Adjust margin for better separation from chart */
+            margin-top: 35px; 
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 0;
+            border-radius: 0;
+            box-shadow: none;
+        }
+
+        th, td {
+            border: 1px solid var(--border-color);
+            padding: 12px 15px;
+            text-align: right;
+            font-size: 0.9em;
+        }
+
+        /* Align Date to the left for better readability */
+        td:first-child {
+            text-align: left;
+            font-weight: 500;
+            color: var(--accent-color);
+        }
+
+        th {
+            background-color: var(--table-header-bg);
+            color: var(--table-header-text);
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            text-align: right;
+            position: sticky; 
+            top: 0; 
+            z-index: 10;
+        }
+        th:first-child {
+            text-align: left;
+        }
+
+        tr:nth-child(even) {
+            background-color: var(--background-medium);
+        }
+
+        tr:hover {
+            background-color: var(--table-row-hover);
+        }
+
+        td strong {
+            font-weight: 700;
+            color: #1a1a1a; 
+        }
+        
+        .empty-message {
+            padding: 30px;
+            text-align: center;
+            color: var(--secondary-text);
+            font-size: 1.1em;
+            background-color: var(--background-medium);
+            border-radius: 8px;
+            margin-top: 25px;
+        }
+
+        .strategy-controls {
+            margin-bottom: 25px;
+            padding: 15px;
+            border-radius: 6px;
+            background-color: var(--background-medium);
+            box-shadow: var(--shadow-light);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .strategy-form {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+        }
+
+        .strategy-form label {
+            font-weight: 500;
+            color: var(--primary-text);
+            font-size: 0.95em;
+            white-space: nowrap;
+        }
+
+        .strategy-form select {
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            background-color: var(--card-bg);
+            color: var(--primary-text);
+            font-size: 0.95em;
+            cursor: pointer;
+            min-width: 250px;
+            flex-grow: 1; /* Allow select box to take up available space */
+            
+            appearance: none;
+            -webkit-appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2212%22%20height%3D%2212%22%20viewBox%3D%220%200%2012%2012%22%3E%3Cpath%20fill%3D%22%23666%22%20d%3D%22M10%203L6%207%202%203z%22%2F%3E%3C%2Fsvg%3E");
+            background-repeat: no-repeat;
+            background-position: right 8px center;
+        }
+
+        .strategy-form button {
+            text-decoration: none;
+            color: var(--table-header-text); 
+            background-color: var(--link-color); /* Use a blue/accent color for primary action button */
+            padding: 10px 18px;
+            border: none;
+            border-radius: 4px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            font-size: 0.95em;
+        }
+
+        .strategy-form button:hover {
+            background-color: #0056b3; /* Darker blue on hover */
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+        }
+
+        /* =========================================
+   RESPONSIVE DESIGN
+   ========================================= */
+
+/* Tablets & large phones (max-width: 900px) */
+@media (max-width: 900px) {
+
+    .strategy-form {
+        flex-direction: column; /* Stacks the two .form-group divs */
+        align-items: stretch;
+        gap: 15px; /* Increase gap between the stacked elements */
+    }
+
+    /* This ensures the label and select stack cleanly within the form-group */
+    .form-group {
+        flex-direction: column;
+        align-items: flex-start;
+        width: 100%;
+    }
+
+    .strategy-form select {
+        min-width: 100%;
+        /* Keep existing styles like flex-grow: unset; */
+    }
+
+    body {
+        padding: 20px;
+    }
+
+    .container {
+        padding: 20px;
+        max-width: 95%;
+    }
+
+    h1 {
+        font-size: 2em;
+    }
+
+    .tradingview-widget-container {
+        height: 500px; /* reduce height for medium devices */
+    }
+
+    .strategy-form {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 15px;
+    }
+
+    .strategy-form select {
+        min-width: 100%;
+        flex-grow: unset;
+    }
+
+    .strategy-form button {
+        width: 100%;
+    }
+
+    .table-scroll-container {
+        max-height: 400px;
+    }
+
+    table th, table td {
+        padding: 10px;
+        font-size: 0.85em;
+    }
+}
+
+/* Phones (max-width: 600px) */
+@media (max-width: 600px) {
+    body {
+        padding: 15px;
+    }
+
+    .container {
+        padding: 15px;
+    }
+
+    h1 {
+        font-size: 1.7em;
+    }
+
+    h2 {
+        font-size: 1em;
+    }
+
+    h3 {
+        font-size: 1.2em;
+    }
+
+    /* Chart should shrink more */
+    .tradingview-widget-container {
+        height: 380px;
+    }
+
+    /* Make table horizontally scrollable on small screens */
+    .table-scroll-container {
+        overflow-x: auto;
+        max-height: 350px;
+    }
+
+    table {
+        min-width: 650px; /* prevents column squashing */
+    }
+
+    table th, table td {
+        padding: 8px;
+        font-size: 0.8em;
+    }
+
+    /* Strategy section: stacked layout */
+    .strategy-controls {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .strategy-form {
+        width: 100%;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .strategy-form select {
+        width: 100%;
+    }
+
+    .strategy-form button {
+        width: 100%;
+    }
+
+    .back-link {
+        font-size: 0.9em;
+    }
+}
+
+/* Very small phones (max-width: 400px) */
+@media (max-width: 400px) {
+    h1 {
+        font-size: 1.4em;
+    }
+
+    .tradingview-widget-container {
+        height: 320px;
+    }
+
+    table th, table td {
+        font-size: 0.75em;
+    }
+}
+
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <a href="/" class="back-link">&larr; Back to Stock List</a>
+        
+        <!-- Main Header: Stock Name and Symbol -->
+        <h1>{{ stock.name }}</h1>
+        <h2>({{ stock.symbol }})</h2>
+
+        <h3>Price Chart</h3>
+
+        <!-- TradingView Widget BEGIN -->
+        <div class="tradingview-widget-container">
+            <div class="tradingview-widget-container__widget"></div>
+            <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js" async>
+            {
+                "allow_symbol_change": true,
+                "calendar": false,
+                "details": false,
+                "hide_side_toolbar": true,
+                "hide_top_toolbar": false,
+                "hide_legend": false,
+                "hide_volume": false,
+                "hotlist": false,
+                "interval": "D",
+                "locale": "en",
+                "save_image": true,
+                "style": "1",
+                "symbol": "{{stock.exchange}}:{{stock.symbol}}",
+                "theme": "dark",
+                "timezone": "Etc/UTC",
+                "backgroundColor": "#0F0F0F",
+                "gridColor": "rgba(242, 242, 242, 0.06)",
+                "watchlist": [],
+                "withdateranges": false,
+                "compareSymbols": [],
+                "studies": [],
+                "autosize": true,
+                "width": "100%",
+                "height": 450
+            }
+            </script>
+        </div>
+        <!-- TradingView Widget END -->
+
+        <h3>Strategy Application</h3>
+        
+        <div class="strategy-controls">
+            <form action="/strategy" method="post" class="strategy-form">
+                
+                <div class="form-group">
+                    <label for="strategy-select">Select Strategy:</label>
+                    <select name="strategy_id" id="strategy-select">
+                        {% for strategy in strategies %}
+                            <option value="{{strategy.id}}">{{strategy.name}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="period-select">Backtest Period:</label>
+                    <select name="backtest_period" id="period-select">
+                        <option value="1m" selected>1 Month</option>
+                        <option value="3m">3 Months</option>
+                        <option value="6m">6 Months</option>
+                        <option value="1y">1 Year</option>
+                        <option value="ytd">Year to Date</option>
+                    </select>
+                </div>
+
+                <input type="hidden" name="stock_id" value="{{stock.id}}">
+                
+                <button type="submit">Execute Strategy</button>
+            </form>
+        </div>
+
+        <h3>Historical Price Data</h3>
+
+        {% if prices %}
+        <!-- WRAPPER ADDED HERE -->
+        <div class="table-scroll-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Open ($)</th>
+                        <th>High ($)</th>
+                        <th>Low ($)</th>
+                        <th>Close ($)</th>
+                        <th>Volume</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for price in prices %}
+                    <tr>
+                        <!-- Date is usually the first column -->
+                        <td>{{ price.date }}</td>
+                        <td>{{ "%.2f"|format(price.open) }}</td>
+                        <td>{{ "%.2f"|format(price.high) }}</td>
+                        <td>{{ "%.2f"|format(price.low) }}</td>
+                        <!-- Emphasize the closing price -->
+                        <td><strong>{{ "%.2f"|format(price.close) }}</strong></td>
+                        <!-- Use the custom filter for comma separation -->
+                        <td>{{ price.volume }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <!-- END WRAPPER -->
+        {% else %}
+        <p class="empty-message">
+            Historical price data is not available for {{ stock.symbol }}.
+        </p>
+        {% endif %}
+
+    </div>
+
+</body>
+</html>
