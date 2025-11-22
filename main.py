@@ -1,5 +1,5 @@
-import os, subprocess, json, tempfile
 import sqlite3
+import os, subprocess, tempfile
 from datetime import date, timedelta
 from dotenv import load_dotenv
 from typing import Annotated
@@ -8,8 +8,6 @@ from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 
 load_dotenv()
-
-BACKTEST_RESULTS = {}
 
 app = FastAPI()
 templates = Jinja2Templates(directory="templates")

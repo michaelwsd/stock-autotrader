@@ -38,6 +38,7 @@ def create_db():
         '''
     )
 
+    # strategy table
     cursor.execute(
         '''
         CREATE TABLE IF NOT EXISTS strategy (
@@ -47,7 +48,7 @@ def create_db():
         '''
     )
 
-    strategies = ['Buy and Hold', 'Opening Range Breakout', 'Bollinger Band', 'SMA Crossover']
+    strategies = ['Buy and Hold', 'Opening Range Breakout', 'Bollinger Bands', 'SMA Crossover']
 
     for strategy in strategies:
         cursor.execute(

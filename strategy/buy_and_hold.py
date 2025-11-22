@@ -2,10 +2,6 @@ from datetime import datetime
 from lumibot.backtesting import YahooDataBacktesting
 from lumibot.strategies import Strategy
 
-from datetime import datetime
-from lumibot.backtesting import YahooDataBacktesting
-from lumibot.strategies import Strategy
-
 class buy_and_hold(Strategy):
 
     def initialize(self, ticker='AAPL'):
@@ -36,5 +32,3 @@ if __name__ == "__main__":
         save_stats_file=False,
         save_tearsheet=True
     )
-
-    print(result)

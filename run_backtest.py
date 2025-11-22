@@ -1,5 +1,6 @@
 import os
 import sys
+import pytz
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 from lumibot.backtesting import YahooDataBacktesting
@@ -19,8 +20,13 @@ for filename in os.listdir(log_dir):
         os.remove(file_path)
 
 # run backtest
-today_date = datetime.today().date()
-end = datetime.combine(today_date, datetime.min.time())
+ny_tz = pytz.timezone("America/New_York")
+# Current time in NY
+now_ny = datetime.now(ny_tz)
+
+# Use yesterday as the safe backtest end date
+yesterday_ny = now_ny.date() - timedelta(days=1)
+end = ny_tz.localize(datetime(yesterday_ny.year, yesterday_ny.month, yesterday_ny.day))
 start = end - relativedelta(months=int(duration)) if duration != 'ytd' else datetime(end.year, 1, 1) 
 
 if strategy == '1':
@@ -28,7 +34,7 @@ if strategy == '1':
             datasource_class=YahooDataBacktesting,
             backtesting_start=start,
             backtesting_end=end,
-            name=f"Buy and Hold '{symbol}'",
+            name=f"Buy and Hold {symbol}",
             show_plot=False,
             show_tearsheet=False,
             parameters={
