@@ -1,14 +1,13 @@
-# Stock Trading App
+# Stock Analytica
 
 ## Overview
-The Stock Trading App is a web-based application designed to help users analyze stock data, apply trading strategies, and backtest their performance. The app provides a user-friendly interface for viewing stock details, historical price data, and executing trading strategies with real-time progress updates.
+Stock Analytica is a web-based application designed to help users analyze stock data, apply trading strategies, and backtest their performance.
 
 ## Features
 - **Stock List**: Browse and search for stocks with filtering options.
 - **Stock Details**: View detailed information about a stock, including historical price data and charts.
 - **Trading Strategies**: Apply predefined trading strategies such as Buy and Hold, SMA Crossover, and Opening Range Breakout.
 - **Backtesting**: Run backtests on selected strategies and view performance metrics.
-- **Real-Time Progress**: Monitor the progress of backtests with a dynamic progress bar.
 
 ## Project Structure
 ```
@@ -50,15 +49,9 @@ logs/                      # Folder for storing backtest logs
    python db/setup_db.py
    ```
 
-5. Populate stock and price data:
-   ```bash
-   python db/populate_stocks.py
-   python db/populate_prices.py
-   ```
-
 6. Run the application:
    ```bash
-   uvicorn main:app --reload
+   fastapi dev main.py
    ```
 
 7. Open the app in your browser at [http://127.0.0.1:8000](http://127.0.0.1:8000).
@@ -66,7 +59,7 @@ logs/                      # Folder for storing backtest logs
 ## Usage
 1. **Browse Stocks**: Navigate to the homepage to view a list of stocks. Use the search bar and filters to refine the list.
 2. **View Stock Details**: Click on a stock to view its details, including historical price data and charts.
-3. **Apply Strategies**: Select a strategy, choose a backtest period, and execute the strategy. Monitor the progress in real-time.
+3. **Apply Strategies**: Select a strategy, choose a backtest period, and execute the strategy.
 4. **Analyze Results**: View the backtest results, including performance metrics and trade details.
 
 ## Trading Strategies
@@ -79,12 +72,6 @@ Backtest logs and results are stored in the `logs/` directory. These include:
 - Tearsheet HTML files
 - Trade CSV files
 - Performance metrics
-
-## Contributing
-Contributions are welcome! Feel free to submit issues or pull requests to improve the app.
-
-## License
-This project is licensed under the MIT License. See the `LICENSE` file for details.
 
 ## Acknowledgments
 - [Lumibot](https://lumibot.com): Used for backtesting and strategy implementation.
