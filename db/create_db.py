@@ -48,7 +48,7 @@ def create_db():
         '''
     )
 
-    strategies = ['Buy and Hold', 'Opening Range Breakout', 'Bollinger Bands', 'SMA Crossover']
+    strategies = ['Buy and Hold', 'Opening Range Breakout', 'SMA Crossover']
 
     for strategy in strategies:
         cursor.execute(

@@ -1,8 +1,9 @@
+import os
 from datetime import datetime
 from lumibot.backtesting import YahooDataBacktesting
 from lumibot.strategies import Strategy
 
-class buy_and_hold(Strategy):
+class BuyAndHold(Strategy):
 
     def initialize(self, ticker='AAPL'):
         self.ticker = ticker
@@ -15,10 +16,16 @@ class buy_and_hold(Strategy):
             self.submit_order(order)
 
 if __name__ == "__main__":
+    dir = "logs"
+    for filename in os.listdir(dir):
+        file_path = os.path.join(dir, filename)
+        if os.path.isfile(file_path):
+            os.remove(file_path)
+
     backtesting_start = datetime(2020, 11, 1)
     backtesting_end = datetime(2020, 11, 5)
 
-    result = buy_and_hold.backtest(
+    result = BuyAndHold.backtest(
         datasource_class=YahooDataBacktesting,
         backtesting_start=backtesting_start,
         backtesting_end=backtesting_end,
