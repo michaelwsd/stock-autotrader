@@ -30,7 +30,7 @@ logs/                      # Folder for storing backtest logs
 1. Clone the repository:
    ```bash
    git clone <repository-url>
-   cd stock-trading-app
+   cd stock-analytica
    ```
 
 2. Set up a Python virtual environment:
