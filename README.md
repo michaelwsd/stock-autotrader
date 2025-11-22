@@ -75,7 +75,7 @@ Backtest logs and results are stored in the `logs/` directory. These include:
 
 ## Preview
 <img width="1148" height="899" alt="image" src="https://github.com/user-attachments/assets/e0715c68-6901-456c-b8d9-2d59b49ce992" />
-<img width="736" height="813" alt="image" src="https://github.com/user-attachments/assets/0e9278b2-b4d5-48a9-82ae-827eb0457625" />
+<img width="1184" height="821" alt="image" src="https://github.com/user-attachments/assets/eb090238-58cd-42c4-8a3d-157327dcfecd" />
 <img width="1060" height="902" alt="image" src="https://github.com/user-attachments/assets/f4aea4b4-d4f7-470c-9f83-88126b17bbe1" />
 
 ## Acknowledgments
